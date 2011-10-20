@@ -1,0 +1,328 @@
+.html5x {
+   background: #c6c7ca;
+   padding: 0;
+   margin: 0;
+   font-family: sans-serif;
+}
+
+.html5x a:link, .html5x a:visited {
+    text-decoration: none;
+    color: #eeF;
+}
+
+.html5x a:hover {
+    text-decoration: underline;
+    color: #ea5;
+}
+
+.html5x .highlight {
+    color: #88b;
+    font-weight: bold;
+}
+
+/*    
+.html5x #header {
+    width: 100%;
+    height: 50px;
+    padding: 1em 2em 1em 2em;
+    background: #9a9faf;
+    border-bottom: 3px solid #515a68;
+    color: white;
+}
+
+.html5x #header table {
+    margin-top: 2px;
+    color: white;
+}
+
+.html5x #header .context {
+    float:right;
+    font-size: 1.2em;
+    margin-right: 4em;
+    margin-top: 4px;
+}
+
+.html5x #header h2, .html5x #header h3  {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+}
+
+*/
+/*
+.html5x #sidebar {
+    float:left;
+    height: 900px;
+    width: 140px;
+    background: #78809a;
+    color: white;
+    border-right: 2px solid #415058;
+    padding: 1em .5em 1em .5em;
+}
+
+.html5x #sidebar dt {
+    font-size: .8em;
+    font-weight: bold;
+    margin-top: 1em;
+}    
+
+.html5x #sidebar dt.selected, dt.selected a:link, dt.selected a:visited {
+    color: #F84;
+    font-size: 1em;
+}
+
+.html5x #sidebar dd {
+    font-size: .7em;
+    margin-left: 1em;
+}    
+
+.html5x #sidebar .highlight {
+    color: #FFF;
+    font-weight: bold;
+}
+*/
+
+.html5x #content {
+    padding: 1em;
+    padding-left: 160px;
+}
+
+.boingfield {
+    width: 400px;
+    height: 400px;
+    margin: 1em 1em 1em 2em;
+    background: #fdfdff;
+    border: 1px solid #aab;
+    position: relative;
+}
+
+.html5x .buttons {
+    margin-left: 2em;
+    padding: 1em 1em 1em 2em;
+    height: 34px;
+}    
+
+.html5x .players table th {
+    background: #313688;
+    color: white;
+}
+
+.note_name {
+    float:left;
+    /*margin-right: .5em;*/
+    padding-top: 2px;
+    width: 3em;
+}
+
+.html5x audio {
+  margin-bottom: 2px;    
+}
+
+.html5x .soundbanks {
+    margin-left: 2em;
+    padding: 1em;
+    border: 1px solid #aab;
+}
+
+.xylophone_bar {
+    height: 10px;
+    position:absolute;
+    color:white;
+    font-size: 8pt;
+    padding: 2px 0 0 6px;
+}
+
+.dlafield {
+    /*
+    width: 550px;
+    height: 550px;
+    */
+    margin: 1em 1em 1em 2em;
+    background: #fdfdff;
+    border: 1px solid #aab;
+    position: relative;
+}
+
+.nbodyfield {
+    /*
+    width: 550px;
+    height: 550px;
+    */
+    margin: 1em 1em 1em 2em;
+    background: #fffaf9;
+    border: 1px solid #aab;
+    position: relative;
+}
+
+.puzzlefield {
+    /*
+    width: 550px;
+    height: 550px;
+    */
+    margin: 1em 1em 1em 1em;
+    background: #666;
+    border: 1px solid #a44;
+    position: relative;
+}
+
+.radio_box {
+    margin: 1em;
+    padding: 0;
+    background: #e3e9ef;
+    border: 1px solid #aac;
+}    
+.radio_title {
+    font-size: .8em;
+    margin: 0;
+    background: #aac;
+    color: white;
+    padding: 1px 4px 1px 4px;
+}
+.radios {
+    padding: 2px 4px 2px 3px;
+    font-size: .8em;
+    margin: 0;
+}
+
+.evolveparent {
+    background-color: #aaa;
+    border: 1px solid #a00;
+    margin: 2px 2px 2px 5px;
+}
+
+.evolvechild {
+    background-color: #888;
+    border: 1px solid #006;
+    margin: 2px;
+}
+
+
+/* tab stuff. */
+
+div.tabs {
+    width: 410px;
+    height: 520px;
+    margin: 1em 1em 3em 1em;
+    padding-left: 1em;
+    position:relative;
+}
+    
+div.tab_contents {
+    border: 2px solid #458;
+    background: #eee;
+    margin-left: -1px;
+    height: 520px;
+    width: 420px;
+    top: 22px;
+    /*position:absolute;
+    top:px;*/
+}
+
+div.tabs p {
+    margin: 4px 0;
+}
+
+div.tab_tabs {
+    margin-bottom: -2px;
+    position:relative;
+    bottom: 2px;
+    }
+
+.tab {
+    height: 26px;
+    width: 66px;
+    padding: 2px 1em 0px 1em;
+    border-top: 2px solid #458;
+    border-left: 2px solid #458;
+    border-right: 2px solid #458;
+    background: #99D;
+    color: #458;
+}
+
+
+.tab:hover {
+    background: #F84;
+}
+
+.tab_selected {
+    height: 26px;
+    width: 66px;
+    padding: 2px 1em 0px 1em;
+    border-bottom: 2px solid #eee;
+    border-top: 2px solid #458;
+    border-left: 2px solid #458;
+    border-right: 2px solid #458;
+    background: #eee;
+    color: #458;
+}
+
+.tab_body {
+    padding: 1em;
+    margin-top: 22px;
+    position:absolute;
+}
+
+.brush_holder {
+    height: 20px;
+    width: 40px;
+    padding: 3px 0 0 3px;
+}
+
+.brush_holder_selected {
+    height: 20px;
+    width: 40px;
+    padding: 3px 0 0 3px;
+    background: #ddd;
+}
+
+.brush_holder:hover, .brush_holder_selected:hover {
+    background: #F84;
+}
+
+
+.brush {
+    background: #888;
+}
+
+.mutation_holder {
+    margin: 1em;
+    padding-top: 3px;
+    float: left;
+    background: #bbb;
+}
+
+.fitness {
+    padding: 2px 1em 2px 1em;
+    font-size: .6em;
+    color: #666;
+}
+
+.mgraph_data {
+    color: #004;
+}
+
+.mutation_canvas {
+    border: 1px solid #999;
+    width: 200;
+    height: 200;
+    margin: 1em;
+}
+
+.mutation_buttons {
+    padding: 0 1em 5px 1em;
+    background: #bbb;
+}
+
+
+#dataset th {
+    background: #56a;
+    color: #8af;
+    padding: 2px 1em;
+}
+
+#dataset td {
+    background: #aaa;
+    color: #236;
+    padding: 1px 1em;
+}

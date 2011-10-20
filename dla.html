@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <title>DLA</title>
+    <link href="css/html5x.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/dla.js" type="text/javascript"></script>
+  </head>
+  <body class="html5x" onload="load('dla1')">
+    <div id="header">
+      <div class="logo">
+        <a href="http://www.art.net/simran"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"></a>
+      </div>
+      <div class="context">HTML5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="bottom">
+            <strong style="font-size:1.5em">DLA</strong>
+          </td>
+          <td valign="bottom">
+            &nbsp;Trying out the &lt;canvas&gt; tag with Diffusion-Limited Aggregation
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="sidebar">
+      <div class="html5_links">
+        <dl>
+          <dt><a href="boing.html">Boing</a></dt>
+          <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+          <dt class="selected"><a href="dla.html">DLA</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+          <dt><a href="nbody.html">nBody</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+          <dt><a href="evolve.html">Evolve</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+          <dt><a href="puzzle.html">Puzzle</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> a cute litte word puzzle with damped-spring physics for graph layout, and genetic programming for graph evolution.</dd>
+          <dt><a href="bubblemap/bubblemap.html">Bubble Map</a></dt>
+          <dd>Using spring physics for data visualization.</dd>
+          <dt><a href="colour/colour.html">ColourWheeeeee!</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+        </dl>
+      </div>
+      <div class="sproinglink"
+           onmouseover="set_image('sproing_logo', 'images/sproing_logo_stellae_hover.png')"
+           onmouseout="set_image('sproing_logo', 'images/sproing_logo_stellae.png')">
+          <a href="http://www.sproingwords.com"><img id="sproing_logo"
+                                                           src="images/sproing_logo_stellae.png"></a>
+        <dl>
+          <dt><a href="http://www.sproingwords.com">Sproing!</a></dt>
+          <dd>A 3D word puzzle<br/> on springs</dd>
+        </dl>
+      </div>
+    </div> <!-- sidebar -->
+    <div id="content">
+      <table>
+        <tr>
+          <td valign="top">
+            <canvas id="dla1" class="dlafield" width="450" height="450">
+            </canvas>
+          </td>
+          <td valign="top">
+            <div class="radio_box">
+              <div class="radio_title">Auto Add</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Off:</td><td><input type="radio" name="auto_add" onclick="set_auto_add(0)" /></td>
+                </tr>
+                <tr>
+                  <td>Often:</td><td><input type="radio" name="auto_add" onclick="set_auto_add(10)" /></td>
+                </tr>
+                <tr>
+                  <td>Sparse:</td><td><input type="radio" name="auto_add" onclick="set_auto_add(50)" /></td>
+                </tr>
+                <tr>
+                  <td>After Grab:</td><td><input type="radio" name="auto_add"  checked="checked" onclick="set_auto_add(-1);" /></td>
+                </tr>
+                <tr>
+                  <td colspan=2><hr></td>
+                </tr>
+                <tr>
+                  <td>From anywhere:</td><td><input type="radio" name="auto_add_from"  onclick="set_auto_add_from(AUTO_ADD_FROM_ANYWHERE);" /></td>
+                </tr>
+                <tr>
+                  <td>From outside:</td><td><input type="radio" name="auto_add_from" checked="checked" onclick="set_auto_add_from(AUTO_ADD_FROM_OUTSIDE);" /></td>
+                </tr>
+                <tr>
+                  <td>From top:</td><td><input type="radio" name="auto_add_from"  onclick="set_auto_add_from(AUTO_ADD_FROM_TOP);" /></td>
+                </tr>
+                
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Speed</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Slow</td><td><input type="radio" name="step_time" onclick="set_step_time(50)" /></td>
+                </tr>
+                <tr>
+                  <td>Medium</td><td><input type="radio" name="step_time" onclick="set_step_time(25)" /></td>
+                </tr>
+                <tr>
+                  <td>Fast</td><td><input type="radio" name="step_time"  onclick="set_step_time(10)" /></td>
+                </tr>
+                <tr>
+                  <td>Lightning</td><td><input type="radio" name="step_time" checked="checked" onclick="set_step_time(1)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Particle Size</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Pixel</td><td><input type="radio" name="particle_size" onclick="set_particle_size_range(1,2)" /></td>
+                </tr>
+                <tr>
+                  <td>Small</td><td><input type="radio" name="particle_size" checked="checked" onclick="set_particle_size_range(1,4)" /></td>
+                </tr>
+                <tr>
+                  <td>Medium</td><td><input type="radio" name="particle_size" onclick="set_particle_size_range(3,7)" /></td>
+                </tr>
+                <tr>
+                  <td>Large</td><td><input type="radio" name="particle_size"  onclick="set_particle_size_range(4,11)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+          </td>
+          <td valign="top">
+            <div class="radio_box">
+              <div class="radio_title">Aggregation threshold</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>1.0 * size</td><td><input type="radio" name="aggthresh" onclick="set_aggregation_threshold(1.0)" /></td>
+                </tr>
+                <tr>
+                  <td>1.5 * size</td><td><input type="radio" name="aggthresh" checked="checked" onclick="set_aggregation_threshold(1.5)" /></td>
+                </tr>
+                <tr>
+                  <td>2.0 * size</td><td><input type="radio" name="aggthresh" onclick="set_aggregation_threshold(2.0)" /></td>
+                </tr>
+                <tr>
+                  <td>3.0 * size</td><td><input type="radio" name="aggthresh" onclick="set_aggregation_threshold(3.0)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Aggregate on</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Any particle</td><td><input type="radio" name="aggtype"  onclick="set_aggregate_fixed_only(false)" /></td>
+                </tr>
+                <tr>
+                  <td>Only fixed particles</td><td><input type="radio" name="aggtype" checked="checked" onclick="set_aggregate_fixed_only(true)" /></td>
+                </tr>
+                <tr>
+                  <td colspan=2><i>Mouse click creates<br/>
+                      fixed seed particle.</i></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <div class="buttons">
+              <input type="button" name="start_dla" value="Go" onclick="start_dla()" />
+              <input type="button" name="stop_dla" value="Stop" onclick="stop_dla()" />
+              <input type="button" name="step_dla" value="Step" onclick="step_dla()" />
+              <input type="button" name="clear_dla" value="Clear" onclick="clear_dla()" />
+              <span>&nbsp;</span>
+              <input type="button" name="add" value="Add" onclick="introduce_particle()" />
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="debug" id="debug">
+      </div>
+    <div> <!-- content --> 
+
+ </body>
+</html>

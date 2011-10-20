@@ -1,0 +1,451 @@
+<html>
+  <head>
+    <title>puzzle</title>
+    <link href="css/html5x.css" media="all" rel="stylesheet" type="text/css" />
+    <!-- <script src="js/some_words200.js" type="text/javascript"></script> -->
+    <script src="js/some_words.js" type="text/javascript"></script>
+    <!-- <script type="text/javascript" src="js/glMatrix-0.9.5.min.js"></script> -->
+    <script src="js/glMatrix.js" type="text/javascript"></script>
+    <script src="js/dictionary.js" type="text/javascript"></script>
+    <script src="js/vec3.js" type="text/javascript"></script>
+    <script src="js/tab_handler.js" type="text/javascript"></script>
+    <script src="js/graph.js" type="text/javascript"></script>
+    <script src="js/puzzle_player3.js" type="text/javascript"></script>
+    <script src="js/puzzle3.js" type="text/javascript"></script>
+  </head>
+  <body class="html5x" onload="load('puzzle1')">
+    <div id="header">
+      <div class="context">HTML5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="top">
+            <strong style="font-size:1.5em">puzzle&nbsp;</strong>
+          </td>
+          <td >
+            <p style="font-size:.8em">
+              Now I've added 3D! Click [Zbump] to randomize the
+              z-values a bit, and see how it anneals in 3D. I've also
+              added more options to the fitness function, since
+              finding the crossing edges doesn't work as well in
+              3D. Now it optimizes for less average tension.
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="sidebar">
+      <dl>
+        <dt><a href="boing.html">Boing</a></dt>
+        <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+        <dt><a href="dla.html">DLA</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+        <dt><a href="nbody.html">nBody</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+        <dt ><a href="evolve.html">Evolve</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+        <dt><a href="puzzle.html">Puzzle</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt;</span> a cute litte word puzzle with damped-spring physics for graph layout, and genetic programming for graph evolution.</dd>
+        <dt class="selected"><a href="puzzle3.html">Puzzle 3D</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt;</span>Same puzzle, but now in 3D.</dd>
+        <dt><a href="colour/colour.html">ColourWheeeeee!</a></dt>
+        <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+      </dl>
+    </div>
+    <div id="content">
+      <table>
+        <tr>
+          <td valign="top">
+            <canvas id="puzzle1" class="puzzlefield" width="450" height="450">
+            </canvas>
+            <div class="buttons">
+              <input type="button" name="start_annealing" value="Anneal" onclick="start_loop()" />
+              <input type="button" name="stop_nbody" value="Stop" onclick="stop()" />
+              <input type="button" name="step_nbody" value="Step" onclick="onestep()" />
+              <!-- <input type="button" name="step_nbody" value="calculate_forces" onclick="calculate_forces_once()" /> -->
+              <input type="button" name="reset_nbody" value="Reset" onclick="reset()" />
+              <input type="button" name="zump" value="Zbump" onclick="zbump()" />
+              <input type="button" name="jostle" value="Jostle" onclick="jostle_puzzle('main')" />
+              <!-- <input type="button" name="reset_nbody" value="Show all the Words!" onclick="solve()" /> -->
+              <span>&nbsp;</span>
+              <!-- <input type="button" name="add" value="Add" onclick="introduce_particle()" /> -->
+            </div>
+          </td>
+          <td valign="top">
+            <div class="tabs">
+              <div class="tab_tabs">
+                <span class="tab_selected" id="play" onclick="show_tab('play', ['tune', 'evolve', 'fitness']); set_mode('play')">Play</span>
+                <span class="tab" id="tune" onclick="show_tab('tune', ['play', 'evolve', 'fitness']); set_mode('tune')">Tune</span>
+                <span class="tab" id="evolve" onclick="show_tab('evolve', ['play', 'tune', 'fitness']); set_mode('evolve')">Evolve</span>
+                <span class="tab" id="fitness" onclick="show_tab('fitness', ['play', 'tune', 'evolve']); ">Fitness</span>
+              </div>
+              <div class="tab_contents">
+                <div class="tab_body" id="tabcontent_play">
+                  <table>
+                    <tr>
+                      <td valign="top">
+                        
+                        <input type="text" id="play_input" cols="12" onchange="word_submitted()" onkeyup="key_press()"> </input>
+                        <p style="font-size: .9em;">
+                          <span id="main_puzzle_num_words"></span>
+                        </p>
+                        <br/>
+                        <textarea id="found_words" rows="22" cols="18" > </textarea>
+                      </td>
+                      
+                      <td valign="top" >
+                        <div style="font-size: smaller">
+                          <input type="button" value="Play" onclick="play_current_game()" />
+                          <input type="button" value="New" onclick="new_letters_same_structure(); play_current_game();" />
+                          <div class="puzzle_list">
+                            <select id="puzzle_list" onchange="select_puzzle('puzzle_list')">
+                              <option value="popcorn">Popcorn</option>
+                              <option value="gobble_4x4">Gobble 4x4</option>
+                            </select>
+
+                          <div class="radio_box" style="width:150px">
+                            <div class="radio_title">Puzzles</div>
+                            <div class="radios" >
+                              <table style="font-size:.8em">
+                                <tr>
+                                  <td>Backtracking test</td><td><input type="radio" name="world"
+                                                              onclick="load_puzzle('backtracking_test')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Popcorn</td><td><input type="radio" name="world"
+                                                              onclick="load_puzzle('popcorn')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Icosahedron</td><td><input type="radio" name="world"
+                                                                 checked="checked"
+                                                               onclick="load_puzzle('icosahedron')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Flat Icosahedron</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('icosahedron_flat')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Flat Dodecahedron</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('dodecahedron_flat')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Stellated Dodecahedron</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('stellated_dodecahedron')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Truss</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('truss')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Ring Truss</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('ring_truss')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Box Springs</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('box_springs')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Gobble 3x3</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('gobble_3x3')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Gobble 4x4</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('gobble_4x4')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Gobble 5x5</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('gobble_5x5')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Gobble 3x5</td><td><input type="radio" name="world"
+                                                               onclick="load_puzzle('gobble_3x5')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Octohedron</td><td><input type="radio" name="world"
+                                                           onclick="load_puzzle('octohedron')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>10D</td><td><input type="radio" name="world"  onclick="load_puzzle('d10')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Random(10, 12)</td><td><input type="radio" name="world"  onclick="load_random_puzzle(10, 12)" /></td>
+                                </tr>
+                                <!--
+                                    <tr>
+                                      <td>&lt;coming soon&gt;</td><td><input type="radio" name="world" onclick="/*load_puzzle('ringworld')*/" /></td>
+                                    </tr>
+                                <tr>
+                                  <td>&lt;coming soon&gt;</td><td><input type="radio" name="world" onclick="/*load_puzzle('ringworld')*/" /></td>
+                                </tr>
+                                -->
+                              </table>
+                            </div>
+                          </div> <!-- radio box -->
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <input type="button" id="solve" value="Solve" onclick="find_all_words()" />
+                        <span id="dict_msg" style="font-size: .8em;color: #777"></span>
+                      </td>
+                    </tr>
+                    
+                  </table>
+                </div> <!-- play -->
+                <div class="tab_body" id="tabcontent_tune">
+                  <table>
+                    <tr>
+                      <td valign="top">
+                        <div class="radio_box">
+                          <div class="radio_title">Friction</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Off:</td><td><input type="radio" name="friction" onclick="set_friction(1.0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Small:</td><td><input type="radio" name="friction" onclick="set_friction(.990)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium:</td><td><input type="radio" name="friction" checked="checked"  onclick="set_friction(.95)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Pea Soup:</td><td><input type="radio" name="friction"  onclick="set_friction(.85);" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                        <div class="radio_box">
+                          <div class="radio_title">Delta T</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Fine</td><td><input type="radio" name="delta_t" onclick="set_delta_t(100)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td><td><input type="radio" name="delta_t" checked="checked" onclick="set_delta_t(500)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Coarse</td><td><input type="radio" name="delta_t" onclick="set_delta_t(1000)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                      <td>
+                        <div class="radio_box">
+                          <div class="radio_title">Speed</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Slow</td><td><input type="radio" name="step_time" onclick="set_step_time(50)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td><td><input type="radio" name="step_time" onclick="set_step_time(25)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Fast</td><td><input type="radio" name="step_time" checked="checked" onclick="set_step_time(10)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Lightning</td><td><input type="radio" name="step_time" onclick="set_step_time(1)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                        <div class="radio_box">
+                          <div class="radio_title">Trails</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Off</td><td><input type="radio" name="trails"
+                                                       checked="checked"
+                                                       onclick="set_trails(0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Short</td><td><input type="radio" name="trails"
+                                                         onclick="set_trails(.1)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Long</td><td><input type="radio" name="trails"
+                                                        onclick="set_trails(.01)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Infinite</td><td><input type="radio" name="trails"
+                                                            onclick="set_trails(-1)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                      <td valign="top">
+                        <div class="radio_box">
+                          <div class="radio_title">Node Repulsion</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Off</td><td><input type="radio" name="step_time" onclick="set_node_repulsion(0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Small</td><td><input type="radio" name="step_time" onclick="set_node_repulsion(12)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td><td><input type="radio" name="step_time" checked="checked" onclick="set_node_repulsion(22)" /></td>
+                              </tr>
+                              <tr>
+                                <td>at Large</td><td><input type="radio" name="step_time" onclick="set_node_repulsion(28)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                    </tr>
+                  </table>
+                </div> <!-- tune -->
+                <div class="tab_body" id="tabcontent_evolve">
+                  <table border=0>
+                    <tr>
+                      <td valign="top" colspan="2">
+                        <input type="button" name="mutate" onclick="mutate_main_puzzle()" value="Mutate Main Puzzle" />
+                        &nbsp;&nbsp;<input type="checkbox" name="only_letters" onclick="toggle_mutation_param_letters()" />Only mutate letters.
+                        <br/>
+                        <input type="button" name="evolve" onclick="evolve_puzzle()" value="Evolve"/>
+                        <input type="text" id="generations" name="generations" value="5" size="2" /> generations. <br/>
+                        <br/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
+                        
+                        <!--                        
+                        <input type="button" name="mutate" onclick="mutate_once(0)" value="Mutate Once[0]" />
+                        <input type="button" name="mutate" onclick="test_mutate_add_node(0)" value="Mutate: add node" />
+                        <input type="button" name="mutate" onclick="test_mutate_remove_node(0)" value="Mutate: remove node" />
+                        <input type="button" name="mutate" onclick="test_mutate_add_edge(0)" value="Mutate: add edge" />
+                        <input type="button" name="mutate" onclick="test_mutate_remove_edge(0)" value="Mutate: remove edge" />
+                        <input type="button" name="mutate" onclick="test_mutate_change_letter(0)" value="Mutate: change letter" />
+-->
+
+                        <div style="font-size: .9em">
+                          <p> <span class="highlight">Manual Mutations:</span><br/></p>
+                          <p style="font-size: .8em">
+                            Click <i>Mutate Main Puzzle</i>
+                            to spawn a set of mutations from the main puzzle,
+                            then click the <i>Mutate</i> buttons on the
+                            mutations to start another round.<br/>
+                            Click <i>Play</i> to make one of the mutations into
+                            the new main puzzle and try to solve it. 
+                            then  select the ones you like.
+                          </p>
+                          <p><span class="highlight">Automatic Evolution</span></p>
+                          <p style="font-size: .8em">
+                            Click <i>Evolve</i> to run an evolution round
+                            to generate more mutations. 
+                          </p>
+                          <p style="font-size: .8em">
+                            The basic idea is to generate a set of 10 or
+                            so different mutations, calculate their
+                            fitness functions, choose the best 4
+                            (including the origin), and display
+                            them. That's one generation. <br/>
+                            
+                            Then generate another set of 10 from the
+                            best of the previous generation, and choose
+                            the best 4 of those. Continue for n generations,
+                            and then 
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="top" colspan="2">
+                        <div style="font-size: .9em;color:#777">
+                          <p>&nbsp;</p>
+                          Main puzzle fitness:<br/>
+                          <p style="font-size: .8em">
+                            &nbsp;&nbsp;Origin: <span class="mgraph_data" id="mgraph_origin_main"></span>
+                            (<span class="mgraph-data" id="mgraph_mutations_main">0</span> mutations)<br/>
+                            &nbsp;&nbsp;Words: <span class="mgraph_data" id="fitness_words_main"></span><br/>
+                            &nbsp;&nbsp;Crossed Edges: <span class="mgraph_data" id="fitness_edges_main"></span><br/>
+                            &nbsp;&nbsp;Fitness: <span class="mgraph_data" id="fitness_weighted_main"></span><br/>
+                            <br/>
+                            <input type="button" value="Recalculate" onclick="display_main_fitness_level()" />
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div> <!-- evolve -->
+                <div class="tab_body" id="tabcontent_fitness">
+                  <table>
+                    <tr>
+                      <td valign="top">
+                        <div class="radio_box" style="width:150px; font-size:.9em">
+                          <div class="radio_title">Fitness function: Words</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Maximize:</td><td><input type="radio" name="fitness_words"  checked="checked" onclick="set_fitness_words(1.0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Embiggen:</td><td><input type="radio" name="fitness_words" onclick="set_fitness_words(.5)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Meh:</td><td><input type="radio" name="fitness_words" onclick="set_fitness_words(.2)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Ignore:</td><td><input type="radio" name="fitness_words" onclick="set_fitness_words(0)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                        <div class="radio_box" style="width:150px; font-size:.9em">
+                          <div class="radio_title">Fitness function: Average Tension</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Minimize:</td><td><input type="radio" name="fitness_avg_tension" checked="checked" onclick="set_fitness_average_tension(1.0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Lower:</td><td><input type="radio" name="fitness_avg_tension" onclick="set_fitness_average_tension(.5)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Ignore:</td><td><input type="radio" name="fitness_avg_tension" onclick="set_fitness_average_tension(0)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                        <div class="radio_box" style="width:150px; font-size:.9em">
+                          <div class="radio_title">Fitness function: Crossed edges</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Minimize:</td><td><input type="radio" name="fitness_edges" onclick="set_fitness_edges(1.0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>eschew:</td><td><input type="radio" name="fitness_edges" onclick="set_fitness_edges(.5)" /></td>
+                              </tr>
+                              <tr>
+                                <td>ignore:</td><td><input type="radio" name="fitness_edges" checked="checked" onclick="set_fitness_edges(0)" /></td>
+                              </tr>
+                              </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                    </tr>
+                  </table>
+                </div> <!-- fitness -->
+                
+              </div> <!-- tab_contents -->
+            </div> <!-- tabs -->
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div id="evolution_results" class="evolution_results" style="border: 1px solid #777;width:100%;display:none;">
+            </div> <!-- evolution_results -->
+          </td>
+        </tr>
+      </table>
+      <div class="debug" id="debug">
+      </div>
+    </div> <!-- content --> 
+  </body>
+</html>

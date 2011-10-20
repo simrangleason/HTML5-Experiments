@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <title>Springmap</title>
+    <link href="../css/html5x.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="css/bubblemap.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/constants.js" type="text/javascript"></script>
+    <script src="js/util.js" type="text/javascript"></script>
+    <script src="js/vec3.js" type="text/javascript"></script>
+    <script src="js/tab_handler.js" type="text/javascript"></script>
+    <script src="js/tool_handler.js" type="text/javascript"></script>
+    <script src="js/datasource.js" type="text/javascript"></script>
+    <script src="js/datasource_random.js" type="text/javascript"></script>
+    <script src="js/datasource_sines.js" type="text/javascript"></script>
+    <script src="js/bubblegraph.js" type="text/javascript"></script>
+    <script src="js/mapper2.js" type="text/javascript"></script>
+    <script src="js/bubblemap.js" type="text/javascript"></script>
+    <script src="js/bubbler.js" type="text/javascript"></script>
+  </head>
+  <body class="html5x" onload="load('bubblemap1')">
+    <div id="header">
+      <div class="logo">
+        <a href="http://www.art.net/simran"><img src="../images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="../images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="../images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"></a>
+      </div>
+      <div class="context">HTML5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="top">
+            <strong style="font-size:1.5em">Bubble Map</strong>
+          </td>
+          <td >
+            <p style="font-size:.8em">
+              A bubble map is an interesting visualization of data points with values.<br/>
+              Let's try using damped-spring physics to lay them out. 
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="sidebar">
+      <div class="html5_links">
+        <dl>
+          <dt><a href="../boing.html">Boing</a></dt>
+          <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+          <dt><a href="../dla.html">DLA</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+          <dt><a href="../nbody.html">nBody</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+          <dt ><a href="../evolve.html">Evolve</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+          <dt><a href="../puzzle.html">Puzzle</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> a cute litte word puzzle with damped-spring physics for graph layout, and genetic programming for graph evolution.</dd>
+          <dt class="selected"><a href="../bubblemap/bubblemap.html">Bubble Map</a></dt>
+          <dd>Using spring physics for data visualization.</dd>
+          <dt><a href="../colour/colour.html">ColourWheeeeee!</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+        </dl>
+      </div>
+      <div class="sproinglink"
+           onmouseover="set_image('sproing_logo', '../images/sproing_logo_stellae_hover.png')"
+           onmouseout="set_image('sproing_logo', '../images/sproing_logo_stellae.png')">
+          <a href="http://www.sproingwords.com"><img id="sproing_logo"
+                                                           src="../images/sproing_logo_stellae.png"></a>
+        <dl>
+          <dt><a href="http://www.sproingwords.com">Sproing!</a></dt>
+          <dd>A 3D word puzzle<br/> on springs</dd>
+        </dl>
+      </div>
+    </div> <!-- sidebar -->
+
+    <div id="content">
+      <table border="0">
+        <tr>
+          <td valign="top">
+            <canvas id="bubblemap1" class="puzzlefield" width="500" height="500">
+            </canvas>
+            <div class="buttons">
+              <input type="button" name="start_annealing" value="Start Springs" onclick="start_loop()" />
+              <input type="button" name="stop_nbody" value="Stop" onclick="stop()" />
+              <input type="button" name="step_nbody" value="Step" onclick="onestep()" />
+              <!-- <input type="button" name="step_nbody" value="calculate_forces" onclick="calculate_forces_once()" /> -->
+              <input type="button" name="reset_nbody" value="Reset" onclick="reset()" />
+              <!--
+              <input type="button" name="jostle" value="Jostle" onclick="jostle_puzzle('main')" />
+              -->
+              <!-- <input type="button" name="reset_nbody" value="Show all the Words!" onclick="solve()" /> -->
+            </div>
+          </td>
+          <td valign="top">
+            <div class="tabs">
+              <div class="tab_tabs">
+                <span class="tab_selected" id="datasets" onclick="show_tab('datasets', ['tune']); set_mode('datasets')">Datasets</span>
+                <span class="tab" id="tune" onclick="show_tab('tune', ['datasets']); set_mode('tune')">Tune</span>
+              </div>
+              <div class="tab_contents">
+                <div class="tab_body" id="tabcontent_datasets">
+                  <table>
+                    <tr>
+                      <td valign="top" >
+                        <div style="font-size: smaller">
+                          <div class="radio_box" style="width:150px">
+                            <div class="radio_title">Datasets</div>
+                            <div class="radios" >
+                              <table style="font-size:.8em">
+                                <tr>
+                                  <td>Random</td>
+                                  <td><input type="radio"
+                                             name="dataset"
+                                             checked="checked"
+                                             onclick="set_current_datasource('random')" /></td>
+                                </tr>
+                                <tr>
+                                  <td>Random Sines</td>
+                                  <td><input type="radio"
+                                             name="dataset"
+                                             onclick="set_current_datasource('random_sines')" /></td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div> <!-- radio box -->
+                          <div class="radio_box" style="width:150px">
+                            <div class="radio_title">Dataset Size</div>
+                            <div class="radios" >
+                              <table style="font-size:.8em">
+                                <tr>
+                                  <td>5</td>
+                                  <td><input type="radio"
+                                             name="dataset_size"
+                                             onclick="set_current_datasource_size(5)" /></td>
+                                </tr>
+                                <tr>
+                                  <td>10</td>
+                                  <td><input type="radio"
+                                             name="dataset_size"
+                                             onclick="set_current_datasource_size(10)" /></td>
+                                </tr>
+                                <tr>
+                                  <td>15</td>
+                                  <td><input type="radio"
+                                             name="dataset_size"
+                                             checked="checked"
+                                             onclick="set_current_datasource_size(15)" /></td>
+                                </tr>
+                                <tr>
+                                  <td>20</td>
+                                  <td><input type="radio"
+                                             name="dataset_size"
+                                             onclick="set_current_datasource_size(20)" /></td>
+                                </tr>
+                                <tr>
+                                  <td>25</td>
+                                  <td><input type="radio"
+                                             name="dataset_size"
+                                             onclick="set_current_datasource_size(25)" /></td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div> <!-- radio box -->
+                        </div>
+                      </td>
+                    </tr>
+                    
+                  </table>
+                </div> <!-- datasets -->
+                <div class="tab_body" id="tabcontent_tune" style="visibility:hidden">
+                  <table>
+                    <tr>
+                      <td valign="top">
+                        <div class="radio_box">
+                          <div class="radio_title">Friction</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Off:</td><td><input type="radio" name="friction" onclick="set_friction(1.0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Small:</td><td><input type="radio" name="friction" onclick="set_friction(.990)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium:</td><td><input type="radio" name="friction" checked="checked"  onclick="set_friction(.95)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Pea Soup:</td><td><input type="radio" name="friction"  onclick="set_friction(.85);" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                        <div class="radio_box">
+                          <div class="radio_title">Delta T</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Fine</td>
+                                <td><input type="radio"
+                                           name="delta_t"
+                                           checked="checked" 
+                                           onclick="set_delta_t(8)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td>
+                                <td><input type="radio"
+                                           name="delta_t"
+                                           onclick="set_delta_t(15)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Coarse</td>
+                                <td><input type="radio"
+                                           name="delta_t"
+                                           onclick="set_delta_t(30)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                      <td valign="top">
+                        <div class="radio_box">
+                          <div class="radio_title">Speed</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Slow</td>
+                                <td><input type="radio"
+                                           name="step_time"
+                                           onclick="set_step_time(1000)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td>
+                                <td><input type="radio"
+                                           name="step_time"
+                                           checked="checked"
+                                           onclick="set_step_time(60)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Fast</td>
+                                <td><input type="radio"
+                                           name="step_time"
+                                           onclick="set_step_time(25)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Lightning</td>
+                                <td><input type="radio"
+                                           name="step_time"
+                                           onclick="set_step_time(1)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                      <td valign="top">
+                        <div class="radio_box">
+                          <div class="radio_title">Node Repulsion</div>
+                          <div class="radios" >
+                            <table style="font-size:.8em">
+                              <tr>
+                                <td>Off</td>
+                                <td><input type="radio"
+                                           name="node_repulsion"
+                                           onclick="set_node_repulsion(0)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Small</td>
+                                <td><input type="radio"
+                                           name="node_repulsion"
+                                           checked="checked"
+                                           onclick="set_node_repulsion(1)" /></td>
+                              </tr>
+                              <tr>
+                                <td>Medium</td>
+                                <td><input type="radio"
+                                           name="node_repulsion"
+                                           onclick="set_node_repulsion(5)" /></td>
+                              </tr>
+                              <tr>
+                                <td>at Large</td>
+                                <td><input type="radio"
+                                           name="node_repulsion"
+                                           onclick="set_node_repulsion(25)" /></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div> <!-- radio box -->
+                      </td>
+                    </tr>
+                  </table>
+                </div> <!-- tune -->
+                
+              </div> <!-- tab_contents -->
+            </div> <!-- tabs -->
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <div id="dataset" class="dataset" style="border: 1px solid #777;width:100%;">
+            </div> <!-- dataset -->
+          </td>
+        </tr>
+      </table>
+      <div class="debug" id="debug">
+      </div>
+    </div> <!-- content --> 
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>boing</title>
+    <link href="css/html5x.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/boing.js" type="text/javascript"></script>
+  </head>
+  <body class="html5x" onload="load('boing1')">
+    <div id="header">
+      <div class="logo">
+        <a href="http://www.art.net/simran"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"></a>
+      </div>
+      <div class="context">HTML5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="bottom">
+            <strong style="font-size:1.5em">boing</strong>
+          </td>
+          <td valign="bottom">
+            Trying out the &lt;audio&gt; tag by making a little gravity-driven xylophone.
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="sidebar">
+      <div class="html5_links">
+        <dl>
+          <dt class="selected"><a href="boing.html">Boing</a></dt>
+          <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+          <dt><a href="dla.html">DLA</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+          <dt><a href="nbody.html">nBody</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+          <dt><a href="evolve.html">Evolve</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+          <dt><a href="puzzle.html">Puzzle</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> a cute litte word puzzle with damped-spring physics for graph layout, and genetic programming for graph evolution.</dd>
+          <dt><a href="bubblemap/bubblemap.html">Bubble Map</a></dt>
+          <dd>Using spring physics for data visualization.</dd>
+          <dt><a href="colour/colour.html">ColourWheeeeee!</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+        </dl>
+      </div>
+      <div class="sproinglink"
+           onmouseover="set_image('sproing_logo', 'images/sproing_logo_stellae_hover.png')"
+           onmouseout="set_image('sproing_logo', 'images/sproing_logo_stellae.png')">
+          <a href="http://www.sproingwords.com"><img id="sproing_logo"
+                                                           src="images/sproing_logo_stellae.png"></a>
+        <dl>
+          <dt><a href="http://www.sproingwords.com">Sproing!</a></dt>
+          <dd>A 3D word puzzle<br/> on springs</dd>
+        </dl>
+      </div>
+    </div> <!-- sidebar -->
+    <div id="content">
+      <div class="boingfield" id="boing1">
+      </div>
+      <div class="buttons">
+        <input type="button" name="add_3" value="Add Blob" onclick="setup_add_random_blobs('boing1', 1)" />
+        <input type="button" name="clear_blobs" value="Clear" onclick="clear_blobs('boing1')" />
+        <input type="button" name="start_boing" value="Play" onclick="start_boing('boing1')" />
+        <input type="button" name="stop_boing" value="Stop" onclick="stop_boing('boing1')" />
+        <input type="button" name="step_boing" value="Step" onclick="boing_step('boing1')" />
+      </div>
+      <div class="soundbanks">
+        <h3>Sound Banks:</H3>
+        <div class="players" id="players">
+        </div>
+      </div>
+    <div> <!-- content -->
+  </body>
+</html>

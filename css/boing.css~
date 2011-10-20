@@ -1,0 +1,29 @@
+.boing {
+    background: #eef;
+    
+}
+
+.boing #header {
+    width: 100%;
+    padding: 2em;
+    background: #aa98dd;
+    border-bottom: 3px solid #428;
+    color: white;
+}
+
+.boing #sidebar {
+    float:left;
+    height: 900px;
+    width: 222px;
+    background: #8872aa;
+    color: white;
+    border-right: 2px solid #428;
+    padding: 1em;
+}
+.boing #content {
+    padding: 1em;
+}
+
+.boingfield {
+    margin: 10em;
+    border: 1px solid #

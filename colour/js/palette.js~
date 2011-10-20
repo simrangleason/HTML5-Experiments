@@ -1,0 +1,11 @@
+function Palette(num_swatches) {
+  this.num_swatches = num_swatches;
+  this.swatches = new Array();
+  for(var i=0; i < this.num_swatches; i++) {
+      var h = random_range(0, 360);
+      var s = random_range(0, 100);
+      var v = random_range(0, 100);
+      this.swatches[i] = new Swatch(h, s, v);
+  }
+}
+

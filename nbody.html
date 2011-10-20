@@ -1,0 +1,212 @@
+<html>
+  <head>
+    <title>nBody</title>
+    <link href="css/html5x.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/nbody.js" type="text/javascript"></script>
+  </head>
+  <body class="html5x" onload="load('nbody1')">
+    <div id="header">
+      <div class="logo">
+        <a href="http://www.art.net/simran"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"></a>
+      </div>
+      <div class="context">HTML5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="top">
+            <strong style="font-size:1.5em">nBody&nbsp;</strong>
+          </td>
+          <td >
+            Because I can't resist writing gravity simulators,
+            we'll use one to explore
+            the &lt;canvas&gt; tag with mouse events.
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="sidebar">
+      <div class="html5_links">
+        <dl>
+          <dt><a href="boing.html">Boing</a></dt>
+          <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+          <dt><a href="dla.html">DLA</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+          <dt class="selected"><a href="nbody.html">nBody</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+          <dt ><a href="evolve.html">Evolve</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+          <dt><a href="puzzle.html">Puzzle</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> a cute litte word puzzle with damped-spring physics for graph layout, and genetic programming for graph evolution.</dd>
+          <dt><a href="bubblemap/bubblemap.html">Bubble Map</a></dt>
+          <dd>Using spring physics for data visualization.</dd>
+          <dt><a href="colour/colour.html">ColourWheeeeee!</a></dt>
+          <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+        </dl>
+      </div>
+      <div class="sproinglink"
+           onmouseover="set_image('sproing_logo', 'images/sproing_logo_stellae_hover.png')"
+           onmouseout="set_image('sproing_logo', 'images/sproing_logo_stellae.png')">
+          <a href="http://www.sproingwords.com"><img id="sproing_logo"
+                                                           src="images/sproing_logo_stellae.png"></a>
+        <dl>
+          <dt><a href="http://www.sproingwords.com">Sproing!</a></dt>
+          <dd>A 3D word puzzle<br/> on springs</dd>
+        </dl>
+      </div>
+    </div> <!-- sidebar -->
+    <div id="content">
+      <table>
+        <tr>
+          <td valign="top">
+            <canvas id="nbody1" class="nbodyfield" width="450" height="450">
+            </canvas>
+            <div class="buttons">
+              <input type="button" name="start_nbody" value="Go" onclick="start_loop()" />
+              <input type="button" name="stop_nbody" value="Stop" onclick="stop()" />
+              <input type="button" name="step_nbody" value="Step" onclick="onestep()" />
+              <input type="button" name="reset_nbody" value="Reset" onclick="reset()" />
+              <input type="button" name="clear_nbody" value="Clear" onclick="clear()" />
+              <span>&nbsp;</span>
+              <!-- <input type="button" name="add" value="Add" onclick="introduce_particle()" /> -->
+            </div>
+          </td>
+          <td valign="top">
+            <div class="radio_box">
+              <div class="radio_title">Friction</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Off:</td><td><input type="radio" name="friction"  checked="checked" onclick="set_friction(1.0)" /></td>
+                </tr>
+                <tr>
+                  <td>Small:</td><td><input type="radio" name="friction" onclick="set_friction(.999)" /></td>
+                </tr>
+                <tr>
+                  <td>Medium:</td><td><input type="radio" name="friction" onclick="set_friction(.995)" /></td>
+                </tr>
+                <tr>
+                  <td>Pea Soup:</td><td><input type="radio" name="friction"  onclick="set_friction(.88);" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Boundary</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>None</td><td><input type="radio" name="boundary" onclick="set_boundary(BOUNDARY_TYPE_NONE)" /></td>
+                </tr>
+                <tr>
+                  <td>Bounce</td><td><input type="radio" name="boundary" checked="checked" onclick="set_boundary(BOUNDARY_TYPE_SPM)" /></td>
+                </tr>
+                <tr>
+                  <td>TORUS</td><td><input type="radio" name="boundary" onclick="set_boundary(BOUNDARY_TYPE_TORUS)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Delta T</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Fine</td><td><input type="radio" name="delta_t" onclick="set_delta_t(100)" /></td>
+                </tr>
+                <tr>
+                  <td>Medium</td><td><input type="radio" name="delta_t" checked="checked" onclick="set_delta_t(500)" /></td>
+                </tr>
+                <tr>
+                  <td>Coarse</td><td><input type="radio" name="delta_t" onclick="set_delta_t(1000)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Speed</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Slow</td><td><input type="radio" name="step_time" onclick="set_step_time(50)" /></td>
+                </tr>
+                <tr>
+                  <td>Medium</td><td><input type="radio" name="step_time" onclick="set_step_time(25)" /></td>
+                </tr>
+                <tr>
+                  <td>Fast</td><td><input type="radio" name="step_time" checked="checked" onclick="set_step_time(10)" /></td>
+                </tr>
+                <tr>
+                  <td>Lightning</td><td><input type="radio" name="step_time" onclick="set_step_time(1)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+            <div class="radio_box">
+              <div class="radio_title">Trails</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Off</td><td><input type="radio" name="trails"
+                                         checked="checked"
+                                         onclick="set_trails(0)" /></td>
+                </tr>
+                <tr>
+                  <td>Short</td><td><input type="radio" name="trails"
+                                         onclick="set_trails(.1)" /></td>
+                </tr>
+                <tr>
+                  <td>Long</td><td><input type="radio" name="trails"
+                                         onclick="set_trails(.01)" /></td>
+                </tr>
+                <tr>
+                  <td>Infinite</td><td><input type="radio" name="trails"
+                                         onclick="set_trails(-1)" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+          </td>
+          <td valign="top" style="padding-top: 2em">
+            <div style="font-size: smaller">
+              <i>
+                <p>Mouse Events: <br>
+                  Grab the bodies to drag them <br/>
+                  while the world is stopped,<br/>
+                  or fling them while <br/>
+                  the world is running.
+                </p>
+              </i>
+            </div>
+
+            <div class="radio_box" style="width:100px">
+              <div class="radio_title">Worlds</div>
+              <div class="radios" >
+              <table style="font-size:.8em">
+                <tr>
+                  <td>Test</td><td><input type="radio" name="world" onclick="read_world('test')" /></td>
+                </tr>
+                <tr>
+                  <td>Fourbit</td><td><input type="radio" name="world"
+                  checked="checked" onclick="read_world('fourbit')" /></td>
+                </tr>
+                <tr>
+                  <td>One Mooon</td><td><input type="radio" name="world"  onclick="read_world('one_moon')" /></td>
+                </tr>
+                <tr>
+                  <td>Ringworld</td><td><input type="radio" name="world" onclick="read_world('ringworld')" /></td>
+                </tr>
+                <tr>
+                  <td>Big Crunch</td><td><input type="radio" name="world" onclick="read_world('big_crunch')" /></td>
+                </tr>
+              </table>
+              </div>
+            </div>
+
+          </td>
+        </tr>
+      </table>
+      <div class="debug" id="debug">
+      </div>
+    <div> <!-- content --> 
+
+ </body>
+</html>

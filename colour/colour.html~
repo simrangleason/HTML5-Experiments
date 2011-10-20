@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>ColourWheeeeeee!</title>
+    <link href="css/colour.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/util.js" type="text/javascript"></script>
+    <script src="js/hsv2rgb.js" type="text/javascript"></script>
+    <script src="js/palette.js" type="text/javascript"></script>
+    <script src="js/colour.js" type="text/javascript"></script>
+    <script src="js/tab_handler.js" type="text/javascript"></script>
+  </head>
+  <body class="colour_whee" onload="load('colour_wheee')">
+    <div id="header">
+      <div class="logo">
+        <a href="http://www.art.net/simran"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"><img src="images/simlogo1.gif" width=52 border="0" alt="Art by Simran Gleason" title="Art by Simran Gleason"></a>
+      </div>
+      <div class="context">Html 5 Experiments</div>
+      <table>
+        <tr>
+          <td valign="top">
+            <strong style="font-size:1.5em">Colour Wheeeee!</strong>
+          </td>
+          <td>Let's see how the colour wheeel from Dr Chroma's Color Studio fits here...
+          </td>
+        </tr>
+      </table>
+    </div>
+    <table>
+      <tr>
+        <td>
+          <div id="sidebar">
+            <dl>
+              <dt><a href="../boing.html">Boing</a></dt>
+              <dd><span class="highlight">&lt;audio&gt;:</span> a gravity-driven xylophone</dd>
+              <dt><a href="../dla.html">DLA</a></dt>
+              <dd><span class="highlight">&lt;canvas&gt;:</span> Diffusion-Limited Aggregation</dd>
+              <dt><a href="../nbody.html">nBody</a></dt>
+              <dd><span class="highlight">&lt;canvas&gt; &amp; mouse events:</span> gravity simulator</dd>
+              <dt><a href="../evolve.html">Evolve</a></dt>
+              <dd><span class="highlight">&lt;canvas&gt; &amp; pixel manipulation:</span> artificial evolution of images</dd>
+              <dt><a href="../puzzle.html">Puzzle</a></dt>
+              <dd><span class="highlight">&lt;canvas&gt;/span> a cute litte word puzzle with simulated annealing for graph layout</dd>
+            </dl>
+            <dt><a href="../bubblemap/bubblemap.html">Bubble Map</a></dt>
+            <dd>Using spring physics for data visualization.</dd>
+            <dt class="selected"><a href="../colour/colour.html">ColourWheeeeee!</a></dt>
+            <dd><span class="highlight">&lt;canvas&gt;</span> More colour manipulations.</dd>
+
+            </dl>
+          </div>
+        </td>
+        <td valign="top">
+    <div id="content">
+      <table>
+        <tr>
+          <td valign="top">
+            <canvas id="colour_wheee" class="colourfield" width="500" height="500">
+          </td>
+        </tr>
+      </table>
+    <div> <!-- content -->
+      </td>
+      </tr>
+    </table>
+
+ </body>
+</html>
